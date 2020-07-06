@@ -1,0 +1,20 @@
+{
+    "python.pythonPath": "C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python38\\python.exe",
+    "sqltools.connections": [
+        {
+            "askForPassword": false,
+            "connectionTimeout": 60,
+            "database": "bot_data",
+            "driver": "MySQL",
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "name": "MySQL",
+            "password": "365Pass",
+            "port": 3306,
+            "previewLimit": 50,
+            "server": "localhost",
+            "username": "nativeuser"
+        }
+    ]
+}
