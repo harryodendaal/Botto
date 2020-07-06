@@ -7,7 +7,7 @@ class PlotGraph:
         self.symbol = _symbol
         self.entry_signal = _entry_signal
         self.exit_signal = _exit_signal
-
+#tsratsartsratsratsartsar
 
     def plotGraph(self):
             fig = make_subplots(
