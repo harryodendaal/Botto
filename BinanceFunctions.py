@@ -4,6 +4,7 @@ import json
 import time
 
 
+
 def getTradingSymbols(Ninjabot):
     url = "https://api.binance.com/api/v1/exchangeInfo"
     try:

@@ -30,8 +30,7 @@ class BacktestingEnviorments:
             Indicators =  ISS.Indicatorstates(_interval=self.interval, _df=self.df, _icurrent=i)
 
             if self.in_trade == False:
-                if Indicators.rsiOverSold():# Indicators.bollingerOverSold() and  Indicators.stochasticBuyCross() and Indicators.stochasticOverSold() and Indicators.pinbarBuySignal()
-                    #abstract
+                if  Indicators.strategyState("beast"):
                     self.entryprices.append([self.df['time'][i + 1], self.df['open'][i + 1]])
                     self.stoploss = self.df["low"][i]
                     self.buy = self.df["open"][i + 1]
@@ -42,31 +41,27 @@ class BacktestingEnviorments:
             if self.in_trade == True:
                 self.CheckforSuccess(i=i)
 
-        if(abs(sum(self.profit)) > 0):
-            self.ShowProfit()
-            #plot = PlotData.PlotGraph(_df=self.df, _symbol=self.symbol,
-            #                        _entry_signal=self.entryprices, _exit_signal=self.exitprices)
-            #plot.plotGraph()
+        # if(abs(sum(self.profit)) > 0):
+        self.ShowProfit()
+        #     plot = PlotData.PlotGraph(_df=self.df, _symbol=self.symbol,
+        #                             _entry_signal=self.entryprices, _exit_signal=self.exitprices)
+        #     plot.plotGraph()
         time.sleep(2)
 
 
     def Checkforfail(self, i):
         if self.df['low'][i+1] < self.stoploss:
-            print('fail')
             self.profit.append((self.stoploss - self.buy) / self.buy * 100)
             self.exitprices.append([self.df['time'][i + 1], self.buy * (1 + (self.stoploss - self.buy) / self.buy)])
             self.losses = self.losses + 1
-            print(self.losses)
             self.in_trade = False
 
     def CheckforSuccess(self, i):
         if (self.df["high"][i + 1] - self.buy)/self.buy > 2* (self.buy - self.stoploss)/self.buy:
-            print('success')
             self.profit.append(2*abs((self.stoploss - self.buy))/ self.buy * 100)
 
             self.exitprices.append([self.df['time'][i + 1], self.buy * (1 + 2*abs((self.stoploss - self.buy)) / self.buy)])
             self.wins = self.wins + 1
-            print(self.wins)
             self.in_trade = False
 
     def ShowProfit(self):
@@ -77,11 +72,6 @@ class BacktestingEnviorments:
         else:
             winrate  = 1
         
-        print(self.profit)
-        print('#############################################################################################')
-        print(self.entryprices)
-        print('############################################################################################')
-        print(self.exitprices)
-        print('######################################################################################')
+
         print(f"Percentage made with longs on  {self.symbol} : {gain}")
         print(f"{tradesmade} trades made with a winrate of {winrate*100}")

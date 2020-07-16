@@ -54,7 +54,7 @@ if __name__ == '__main__':
                 Indicators = Indicatorstates(_interval=interval, _df=df, _icurrent=icurrent)
                 print(str(symbol) + " has an ris of: "  + str(df['rsi'][icurrent]))
 
-                if Indicators.rsiOverSold() == True:
+                if Indicators.strategyState("beast") == True:
                     if df['close'][icurrent] > 0.1:
                         quantity = round(quantity/df['close'][icurrent],4)
                         if quantity > 1:
