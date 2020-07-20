@@ -28,10 +28,10 @@ if __name__ == '__main__':
         symnbol_list = BinanceFunctions.getTradingSymbols(Ninjabot)
         symnbol_list = BinanceFunctions.symbolfilter(pairs=symnbol_list, Ninjabot=Ninjabot)
 
-        Data_base = DatabaseReadInsert.Database(_user="nativeuser", _database='bot_data', _password='365Pass')
+        Data_base = DatabaseReadInsert.Database()
         accountinfo = Ninjabot.account()
         balances = accountinfo["balances"]
-        indicator_name = ["rsi"]
+        indicator_name = ["rsi", "stochastic", "bb"]
 
         print(symnbol_list)
 
@@ -52,7 +52,8 @@ if __name__ == '__main__':
                 df = CreateIndicators.createIndicators(symbol=symbol, df=df, indicator_name=indicator_name)
                 icurrent = len(df['close'])-1
                 Indicators = Indicatorstates(_interval=interval, _df=df, _icurrent=icurrent)
-                print(str(symbol) + " has an ris of: "  + str(df['rsi'][icurrent]))
+                
+                print(symbol)
 
                 if Indicators.strategyState("beast") == True:
                     if df['close'][icurrent] > 0.1:
@@ -60,7 +61,7 @@ if __name__ == '__main__':
                         if quantity > 1:
                             quantity = round(quantity,0)
                             
-                        print(str(symbol) + " has an ris of: "  + str(df['rsi'][icurrent]))
+                        print("{} had rsi:{} had fast:{} had slow: {} had price{}, had lowbol: {}".format(symbol, df['rsi'][icurrent], df['fast'][icurrent], df['slow'][icurrent], df['close'][icurrent], df['low_boll'][icurrent]))
 
                         print(round(quantity/df['close'][icurrent],4))
                         initiateOrderData = BinanceFunctions.placeOrder(Ninjabot=Ninjabot, symbol=symbol, side="BUY",type="MARKET", quantity=quantity,price="426",test= False)
