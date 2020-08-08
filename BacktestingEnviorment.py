@@ -75,3 +75,15 @@ class BacktestingEnviorments:
 
         print(f"Percentage made with longs on  {self.symbol} : {gain}")
         print(f"{tradesmade} trades made with a winrate of {winrate*100}")
+
+
+        #for backtesting get the df and then 
+        # move all rri.... those things one 
+        # forward so that they indicate the 
+        # values at the beginning of the candle 
+        # than use those values to predict wherthe
+        #  or not the current candle will be profitable 
+        # and also what the percentage chaneg is that it
+        #  will be succesful so that our model choose the
+        #  most likely ones too suuccecd for the firs 29 
+        # sekonds of the next candle than takes the trade

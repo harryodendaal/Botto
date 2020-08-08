@@ -42,7 +42,7 @@ def symbolfilter(pairs,Ninjabot):
     # filtering by name
     for pair in pairs:
         ffs = pair[-4:]
-        if 'USDT' == ffs:   
+        if 'USDT' == ffs and "TUSD" not in pair:   
                 symbol_list.append(pair)
     return symbol_list
 

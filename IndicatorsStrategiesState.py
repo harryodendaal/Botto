@@ -7,7 +7,7 @@ class Indicatorstates:
         self.icurrent = _icurrent # make changeble
 ##########################---USING---####################################
     def rsiOverSold(self):
-        if(self.df["rsi"][self.icurrent] < 30):
+        if(self.df["rsi"][self.icurrent] < 60):
             return True
         else:
             return False
@@ -124,5 +124,9 @@ class Indicatorstates:
     def strategyState(self, strategy):
         if strategy == "beast":
             if self.bollingerOverSold() and self.stochasticBuyCross() and self.stochasticOverSold() and self.pinbarBuySignal():
+                return True
+
+        if strategy == "rsi":
+            if self.rsiOverSold():
                 return True
         return False

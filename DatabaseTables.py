@@ -1,7 +1,9 @@
 import sqlite3
 import pandas as pd
+
+
 class Tables:
-    def __init__(self,_database, _user, _password):
+    def __init__(self, _database, _user, _password):
         self.database = _database
         self.user = _user
         self.password = _password
@@ -9,7 +11,7 @@ class Tables:
     def creatBotTable(self):
         conn = sqlite3.connect('bots.db')
         cursor = conn.cursor()
-        insert_query = "CREATE TABLE bots (\
+        insert_query = "CREATE TABLE IF NOT EXISTS bots (\
         botid INTEGER PRIMARY KEY AUTOINCREMENT,\
         strategy text,\
         intrade text,\
@@ -27,7 +29,7 @@ class Tables:
     def createOrdersPlacedTable(self):
         conn = sqlite3.connect('bots.db')
         cursor = conn.cursor()
-        insert_query = "CREATE TABLE ordersPlaced (\
+        insert_query = "CREATE TABLE IF NOT EXISTS ordersPlaced (\
         orderid INTEGER PRIMARY KEY AUTOINCREMENT,\
         botid interger,\
         timetaken text,\
@@ -44,10 +46,11 @@ class Tables:
         conn.commit()
         conn.close()
         print(table)
+
     def createOrdersEndedTable(self):
         conn = sqlite3.connect('bots.db')
         cursor = conn.cursor()
-        insert_query = "CREATE TABLE ordersEnded(\
+        insert_query = "CREATE TABLE IF NOT EXISTS ordersEnded(\
         orderid INTEGER PRIMARY KEY AUTOINCREMENT,\
         botid interger,\
         timetaken text,\
@@ -64,15 +67,14 @@ class Tables:
         conn.close()
         print(table)
 
-    
+
 def main():
-        Table = Tables(_user="nativeuser", _database='bot_data', _password='365Pass')
-        
-        Table.creatBotTable()
-        Table.createOrdersEndedTable()
-        Table.createOrdersPlacedTable()
+    Table = Tables(_user="nativeuser", _database='bot_data',
+                   _password='365Pass')
 
-
+    Table.creatBotTable()
+    Table.createOrdersEndedTable()
+    Table.createOrdersPlacedTable()
 
 
 if __name__ == "__main__":
