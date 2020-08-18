@@ -11,8 +11,6 @@ API_KEY = os.environ.get("API_KEY")
 API_SECRET = os.environ.get("API_SECRET")
 
 
-
-
 class Trading:
     def __init__(self, _df, _symbol, _interval, _profit, _buy=0, _stoploss=0, _sell=0, _wins=0,
                  _losses=0, _inTrade=False, _tradeEntry=[], _tradeExit=[]):
@@ -35,7 +33,8 @@ if __name__ == '__main__':
     Ninjabot = Binance(API_KEY=API_KEY, API_SECRET=API_SECRET)
 
     symnbol_list = BinanceFunctions.getTradingSymbols(Ninjabot)
-    symnbol_list = BinanceFunctions.symbolfilter(pairs=symnbol_list, Ninjabot=Ninjabot)
+    symnbol_list = BinanceFunctions.symbolfilter(
+        pairs=symnbol_list, Ninjabot=Ninjabot)
 
     Data_base = DatabaseReadInsert.Database()
     accountinfo = Ninjabot.account()
@@ -55,37 +54,37 @@ if __name__ == '__main__':
 
     quantity = float(input("how much dollar will you be spending: "))
 
-    
-    #zero signifies false
+    # zero signifies false
     while Data_base.getData(botid=botid, what="intrade", where="bots") == "0":
 
-        strategy = Data_base.getData(botid=botid, what="strategy", where="bots")
+        strategy = Data_base.getData(
+            botid=botid, what="strategy", where="bots")
 
         for symbol in symnbol_list:
-
-            ###if a trade has been made needs to break out of the loop
             if Data_base.getData(botid=botid, what="intrade", where="bots") == "1":
                 break
-            #as the name indicates...
-            df = BinanceFunctions.getSymbolData(Ninjabot=Ninjabot, symbol=symbol, interval=interval)
-            df = CreateIndicators.createIndicators(symbol=symbol, df=df, indicator_name=indicator_name)
-            
-            #this is the latest candale's data in other words the one currenly unfolding
-            icurrent = len(df['close'])-1
+            df = BinanceFunctions.getSymbolData(
+                Ninjabot=Ninjabot, symbol=symbol, interval=interval)
+            df = CreateIndicators.createIndicators(
+                symbol=symbol, df=df, indicator_name=indicator_name)
 
-            Indicators = Indicatorstates(_interval=interval, _df=df, _icurrent=icurrent)
+            icurrent = len(df['close'])-1
+            Indicators = Indicatorstates(
+                _interval=interval, _df=df, _icurrent=icurrent)
 
             print("{} had an rsi of {}".format(symbol, df['rsi'][icurrent]))
 
             if Indicators.strategyState("rsi") == True:
                 print('Profittarget')
-                print(abs((df['close'][icurrent] + 2 * abs((df['low'][icurrent - 1] - df['close'][icurrent])))))
-                
+                print(abs((df['close'][icurrent] + 2 *
+                           abs((df['low'][icurrent - 1] - df['close'][icurrent])))))
+
                 print('Price')
                 print(df['close'][icurrent])
 
                 print("percentage gap")
-                print(abs((df['close'][icurrent] + 2 * abs((df['low'][icurrent - 1] - df['close'][icurrent]))))/df['close'][icurrent])
+                print(abs((df['close'][icurrent] + 2 * abs((df['low']
+                                                            [icurrent - 1] - df['close'][icurrent]))))/df['close'][icurrent])
                 if abs((df['close'][icurrent] + 2 * abs((df['low'][icurrent - 1] - df['close'][icurrent]))))/df['close'][icurrent] < 1.01:
                     if df['close'][icurrent] > 0.1:
                         quantity = round(quantity/df['close'][icurrent], 5)
@@ -97,52 +96,62 @@ if __name__ == '__main__':
 
                         print(round(quantity/df['close'][icurrent], 4))
 
-                        initiateOrderData = BinanceFunctions.placeOrder(Ninjabot=Ninjabot, symbol=symbol, side="BUY", type="MARKET", quantity=quantity, price="426", test=False)
-                        
+                        initiateOrderData = BinanceFunctions.placeOrder(
+                            Ninjabot=Ninjabot, symbol=symbol, side="BUY", type="MARKET", quantity=quantity, price="426", test=False)
 
-                        #calculates the profit target and than doubles the loss for the profit target
+                        # calculates the profit target and than doubles the loss for the profit target
                         stoplosstarget = df['low'][icurrent-1]
-                        profittarget = df['close'][icurrent] + 2 * abs((df['low'][icurrent - 1] - df['close'][icurrent]))
+                        profittarget = df['close'][icurrent] + 2 * \
+                            abs((df['low'][icurrent - 1] - df['close'][icurrent]))
 
-                        Data_base.insertOrdersPlaced(botid=botid, initiateOrderData=initiateOrderData, profittarget=profittarget, stoplosstarget=stoplosstarget)
+                        Data_base.insertOrdersPlaced(
+                            botid=botid, initiateOrderData=initiateOrderData, profittarget=profittarget, stoplosstarget=stoplosstarget)
                         print("Congratulations you bought: " + symbol)
 
-    #the price is irrelevant since market order but im too lazy to remove it sue me
-    #also the 1 signifies true
+    # the price is irrelevant since market order but im too lazy to remove it sue me
+    # also the 1 signifies true
     print(Data_base.getData(botid=botid, what="intrade", where="bots"))
     while Data_base.getData(botid=botid, what="intrade", where="bots") == "1":
         print("in")
 
-        symbol = Data_base.getData(botid=botid, what='symbol', where="ordersPlaced")
-        quantity = Data_base.getData(botid=botid, what='quantity', where="ordersPlaced")*0.99
+        symbol = Data_base.getData(
+            botid=botid, what='symbol', where="ordersPlaced")
+        quantity = Data_base.getData(
+            botid=botid, what='quantity', where="ordersPlaced")*0.99
 
-        #formatting complanits
+        # formatting complanits
         quantity = round(quantity, 5)
         if quantity > 2:
             quantity = math.floor(quantity)
         print(symbol)
         print(quantity)
-        #as the name indicates...
-        df = BinanceFunctions.getSymbolData(Ninjabot=Ninjabot, symbol=symbol, interval=interval)
+        # as the name indicates...
+        df = BinanceFunctions.getSymbolData(
+            Ninjabot=Ninjabot, symbol=symbol, interval=interval)
 
         # no need to creaete indicators right?
-        df = CreateIndicators.createIndicators(symbol=symbol, df=df, indicator_name=indicator_name)
-        
-        #this is the latest candale's data in other words the one currenly unfolding
-        icurrent = len(df['close'])-1
+        df = CreateIndicators.createIndicators(
+            symbol=symbol, df=df, indicator_name=indicator_name)
 
+        # this is the latest candale's data in other words the one currenly unfolding
+        icurrent = len(df['close'])-1
 
         print("going smoothely")
         if df['close'][icurrent] < Data_base.getData(botid=botid, what="stoplosstarget", where="ordersplaced"):
 
-            exitOrderData = BinanceFunctions.placeOrder(Ninjabot=Ninjabot, symbol=symbol, side="SELL", type="MARKET", quantity=quantity, price="1337", test=False)
-            Data_base.insertOrdersEnded( botid=botid, exitOrderData=exitOrderData)
+            exitOrderData = BinanceFunctions.placeOrder(
+                Ninjabot=Ninjabot, symbol=symbol, side="SELL", type="MARKET", quantity=quantity, price="1337", test=False)
+            Data_base.insertOrdersEnded(
+                botid=botid, exitOrderData=exitOrderData)
             print("Congratulations you have ran a succesful test")
 
         elif df['close'][icurrent] > Data_base.getData(botid=botid, what="profittarget", where="ordersplaced"):
 
-            exitOrderData = BinanceFunctions.placeOrder(Ninjabot=Ninjabot, symbol=symbol, side="SELL", type="MARKET", quantity=quantity, price="1337", test=False)
-            Data_base.insertOrdersEnded( botid=botid, exitOrderData=exitOrderData)
+            exitOrderData = BinanceFunctions.placeOrder(
+                Ninjabot=Ninjabot, symbol=symbol, side="SELL", type="MARKET", quantity=quantity, price="1337", test=False)
+            Data_base.insertOrdersEnded(
+                botid=botid, exitOrderData=exitOrderData)
             print("congratulations you have run a succesful test and made a profit")
         print(df['close'][icurrent])
-        print(Data_base.getData(botid=botid, what="profittarget", where="ordersplaced"))
+        print(Data_base.getData(botid=botid,
+                                what="profittarget", where="ordersplaced"))

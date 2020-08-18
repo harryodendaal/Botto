@@ -21,7 +21,7 @@ def getTradingSymbols(Ninjabot):
             symbols_list.append(pair['symbol'])
     return symbols_list
 
-def getSymbolData(Ninjabot, symbol, interval):
+def getSymbolData(Ninjabot, symbol, interval, latest=False):
     Ninjabot = Ninjabot
     # download data
     df = Ninjabot.klines(symbol=symbol, interval=interval)
@@ -34,6 +34,8 @@ def getSymbolData(Ninjabot, symbol, interval):
 
     for col in col_names:
         df[col] = df[col].astype(float)
+    if latest:
+        return df['close'][499]
     return df
 
 

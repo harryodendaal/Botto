@@ -4,9 +4,12 @@ import CreateIndicators
 import BacktestingEnviorment
 import DatabaseReadInsert
 import datetime
+import os
+from BinanceFunctions import getSymbolData
+API_KEY = os.environ.get("API_KEY")
+API_SECRET = os.environ.get("API_SECRET")
 
-API_KEY = "RcNwmxsGSrqbDZKqniDb2G4v7gEdx1iCY6LQaa7pFLz9SV4M2nm8xIokQ1WqaNsB"
-API_SECRET = "FvZiJDnTJ9El1TKz5eHpdFnB5TqMOXOvDe3YM63gYpRJH5Ne8C6PuiDDtZKxr0Nm"
 
-datetime.datetime.now()
-print(datetime.datetime.now())
+Ninjabot = Binance(API_KEY=API_KEY, API_SECRET=API_SECRET)
+
+print(getSymbolData(Ninjabot, "ETHUSDT", "15m", latest=True))

@@ -29,7 +29,7 @@ class Database:
             qty = qty + float(ele['qty'])
 
         price = price/qty
-        commission = commission
+        commission = commission*price
 
 
         insert_query = "insert into ordersPlaced (botid, timetaken, symbol, quantity, price, commission, profittarget, stoplosstarget)\
@@ -60,7 +60,7 @@ class Database:
             qty = qty + float(ele['qty'])
 
         price = price/qty
-        commission = commission
+        commission = commission*price
 
         profit = (price - self.getData(botid=botid, what="price",where="ordersplaced"))/price
 
